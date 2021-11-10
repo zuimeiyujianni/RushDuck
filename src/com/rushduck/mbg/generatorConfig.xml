@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <!-- 配置数据库连接的包（给出数据库连接的包的地址，这里的数据库连接的包是mysql-connector-java-5.1.46-bin.jar）
+     由于在项目中已经配置了数据库连接的包，因此标签classPathEntry可以注释 -->
+  <!-- <classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" /> -->
+  
+  <!-- 这里的id是唯一的，这里用MyGenerator,运行的环境就是MyBatis3 -->
+  <context id="MyGenerator" targetRuntime="MyBatis3">
+  
+  	<!-- 这个标签可以去掉注释 -->
+  	<commentGenerator>
+  		<!-- 去掉注释 -->
+  		<property name="suppressAllComments" value="true"/>
+  		<!-- 去掉时间戳 -->
+  		<property name="suppressDate" value="true"/>
+  	</commentGenerator>
+  
+ 	<!-- 数据库的连接信息，这个非常熟悉 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/rushduck?useSSL=false"
+        userId="root"
+        password="root">
+    </jdbcConnection>
+
+
+	<!-- Java JDBC数据类型转换，这个一般不需要自己进行配置  -->
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+	<!-- 
+	java Bean配置 
+	targetPackage是输出包名，即输出的路径
+	targetProject是输出的项目位置mybatis_generator/src,这里可以使用src简写
+	-->
+    <javaModelGenerator targetPackage="com.rushduck.bean" targetProject="src">
+      <!-- enableSubPackages:是否开启子包名称,是否在包名后面添加scheme名称，这里设置为false -->
+      <property name="enableSubPackages" value="false" />
+      <!-- 在Set中添加.trim，去掉空格 -->
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+	<!-- 设置生成的mapper.xml文件的报名和项目位置 -->
+    <sqlMapGenerator targetPackage="com.rushduck.mapper"  targetProject="src">
+      <property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+
+	<!-- 配置java接口的位置,这里的输出报名和mapper.xml在同一个包下,这样才可以被扫描到 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.rushduck.mapper"  targetProject="src">
+      <property name="enableSubPackages" value="false" />
+    </javaClientGenerator>
+
+	<!-- 数据表，根据数据库中的表来生成 ，这里比较复杂，注释原来的重写-->
+    <!-- <table schema="DB2ADMIN" tableName="ALLTYPES" domainObjectName="Customer" >
+      <property name="useActualColumnNames" value="true"/>
+      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+      <columnOverride column="DATE_FIELD" property="startDate" />
+      <ignoreColumn column="FRED" />
+      <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />
+    </table> -->
+    
+    <table tableName="picture"/>
+    <!-- <table tableName="collection"></table>
+    <table tableName="forward"></table>
+    <table tableName="likes"></table>
+    <table tableName="picture"></table>
+    <table tableName="portrait"></table>
+    <table tableName="relation"></table> -->
+    <!-- <table tableName="country"/> -->
+
+  </context>
+</generatorConfiguration>

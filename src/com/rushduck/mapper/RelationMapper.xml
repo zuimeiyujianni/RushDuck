@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rushduck.mapper.RelationMapper">
+  <resultMap id="BaseResultMap" type="com.rushduck.bean.Relation">
+    <id column="relationId" jdbcType="INTEGER" property="relationid" />
+    <result column="relationCreateTime" jdbcType="DATE" property="relationcreatetime" />
+    <result column="relationFollowUserId" jdbcType="INTEGER" property="relationfollowuserid" />
+    <result column="relationBeFollowUserId" jdbcType="INTEGER" property="relationbefollowuserid" />
+    <result column="relationType" jdbcType="VARCHAR" property="relationtype" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    relationId, relationCreateTime, relationFollowUserId, relationBeFollowUserId, relationType
+  </sql>
+  <select id="selectByExample" parameterType="com.rushduck.bean.RelationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from relation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from relation
+    where relationId = #{relationid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from relation
+    where relationId = #{relationid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rushduck.bean.RelationExample">
+    delete from relation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rushduck.bean.Relation">
+    insert into relation (relationId, relationCreateTime, relationFollowUserId, 
+      relationBeFollowUserId, relationType)
+    values (#{relationid,jdbcType=INTEGER}, #{relationcreatetime,jdbcType=DATE}, #{relationfollowuserid,jdbcType=INTEGER}, 
+      #{relationbefollowuserid,jdbcType=INTEGER}, #{relationtype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rushduck.bean.Relation">
+    insert into relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relationid != null">
+        relationId,
+      </if>
+      <if test="relationcreatetime != null">
+        relationCreateTime,
+      </if>
+      <if test="relationfollowuserid != null">
+        relationFollowUserId,
+      </if>
+      <if test="relationbefollowuserid != null">
+        relationBeFollowUserId,
+      </if>
+      <if test="relationtype != null">
+        relationType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relationid != null">
+        #{relationid,jdbcType=INTEGER},
+      </if>
+      <if test="relationcreatetime != null">
+        #{relationcreatetime,jdbcType=DATE},
+      </if>
+      <if test="relationfollowuserid != null">
+        #{relationfollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="relationbefollowuserid != null">
+        #{relationbefollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="relationtype != null">
+        #{relationtype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rushduck.bean.RelationExample" resultType="java.lang.Long">
+    select count(*) from relation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update relation
+    <set>
+      <if test="record.relationid != null">
+        relationId = #{record.relationid,jdbcType=INTEGER},
+      </if>
+      <if test="record.relationcreatetime != null">
+        relationCreateTime = #{record.relationcreatetime,jdbcType=DATE},
+      </if>
+      <if test="record.relationfollowuserid != null">
+        relationFollowUserId = #{record.relationfollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.relationbefollowuserid != null">
+        relationBeFollowUserId = #{record.relationbefollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.relationtype != null">
+        relationType = #{record.relationtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update relation
+    set relationId = #{record.relationid,jdbcType=INTEGER},
+      relationCreateTime = #{record.relationcreatetime,jdbcType=DATE},
+      relationFollowUserId = #{record.relationfollowuserid,jdbcType=INTEGER},
+      relationBeFollowUserId = #{record.relationbefollowuserid,jdbcType=INTEGER},
+      relationType = #{record.relationtype,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rushduck.bean.Relation">
+    update relation
+    <set>
+      <if test="relationcreatetime != null">
+        relationCreateTime = #{relationcreatetime,jdbcType=DATE},
+      </if>
+      <if test="relationfollowuserid != null">
+        relationFollowUserId = #{relationfollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="relationbefollowuserid != null">
+        relationBeFollowUserId = #{relationbefollowuserid,jdbcType=INTEGER},
+      </if>
+      <if test="relationtype != null">
+        relationType = #{relationtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where relationId = #{relationid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rushduck.bean.Relation">
+    update relation
+    set relationCreateTime = #{relationcreatetime,jdbcType=DATE},
+      relationFollowUserId = #{relationfollowuserid,jdbcType=INTEGER},
+      relationBeFollowUserId = #{relationbefollowuserid,jdbcType=INTEGER},
+      relationType = #{relationtype,jdbcType=VARCHAR}
+    where relationId = #{relationid,jdbcType=INTEGER}
+  </update>
+</mapper>

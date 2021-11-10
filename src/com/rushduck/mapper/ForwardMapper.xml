@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rushduck.mapper.ForwardMapper">
+  <resultMap id="BaseResultMap" type="com.rushduck.bean.Forward">
+    <id column="forwardId" jdbcType="INTEGER" property="forwardid" />
+    <result column="forwarder" jdbcType="INTEGER" property="forwarder" />
+    <result column="forwardMessageId" jdbcType="INTEGER" property="forwardmessageid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    forwardId, forwarder, forwardMessageId
+  </sql>
+  <select id="selectByExample" parameterType="com.rushduck.bean.ForwardExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from forward
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from forward
+    where forwardId = #{forwardid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from forward
+    where forwardId = #{forwardid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rushduck.bean.ForwardExample">
+    delete from forward
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rushduck.bean.Forward">
+    insert into forward (forwardId, forwarder, forwardMessageId
+      )
+    values (#{forwardid,jdbcType=INTEGER}, #{forwarder,jdbcType=INTEGER}, #{forwardmessageid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rushduck.bean.Forward">
+    insert into forward
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="forwardid != null">
+        forwardId,
+      </if>
+      <if test="forwarder != null">
+        forwarder,
+      </if>
+      <if test="forwardmessageid != null">
+        forwardMessageId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="forwardid != null">
+        #{forwardid,jdbcType=INTEGER},
+      </if>
+      <if test="forwarder != null">
+        #{forwarder,jdbcType=INTEGER},
+      </if>
+      <if test="forwardmessageid != null">
+        #{forwardmessageid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rushduck.bean.ForwardExample" resultType="java.lang.Long">
+    select count(*) from forward
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update forward
+    <set>
+      <if test="record.forwardid != null">
+        forwardId = #{record.forwardid,jdbcType=INTEGER},
+      </if>
+      <if test="record.forwarder != null">
+        forwarder = #{record.forwarder,jdbcType=INTEGER},
+      </if>
+      <if test="record.forwardmessageid != null">
+        forwardMessageId = #{record.forwardmessageid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update forward
+    set forwardId = #{record.forwardid,jdbcType=INTEGER},
+      forwarder = #{record.forwarder,jdbcType=INTEGER},
+      forwardMessageId = #{record.forwardmessageid,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rushduck.bean.Forward">
+    update forward
+    <set>
+      <if test="forwarder != null">
+        forwarder = #{forwarder,jdbcType=INTEGER},
+      </if>
+      <if test="forwardmessageid != null">
+        forwardMessageId = #{forwardmessageid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where forwardId = #{forwardid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rushduck.bean.Forward">
+    update forward
+    set forwarder = #{forwarder,jdbcType=INTEGER},
+      forwardMessageId = #{forwardmessageid,jdbcType=INTEGER}
+    where forwardId = #{forwardid,jdbcType=INTEGER}
+  </update>
+</mapper>

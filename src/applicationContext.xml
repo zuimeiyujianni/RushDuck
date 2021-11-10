@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	<!-- 加载db.properties文件:两种方法都可以 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!-- <bean id="config" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<array>
+				<value>db.properties</value>
+			</array>
+		</property>
+	</bean> -->
+	
+	<!-- Spring整合Mybatis:将原来的Mybatis中的配置全部交给Spring进行管理 -->
+	<!-- 配置数据源dataSource -->
+	<bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${my.driverClass}"/>
+		<property name="jdbcUrl" value="${my.jdbcUrl}"/>
+		<property name="user" value="${my.user}"/>
+		<property name="password" value="${my.password}"/>
+	</bean>
+	
+	<!-- 在SpringIoc容器中创建Mybatis核心类SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- mapper.xml的路径 -->
+		<property name="mapperLocations" value="classpath:com/rushduck/mapper/*.xml"></property>
+	</bean>
+	
+	<!-- 将Mybatis的sqlSessionFactory交给Spring -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<!-- 指定批量产生com.rushduck.mapper包中的mapper对象，对象名就是首字母小写的接口名 -->
+		<property name="basePackage" value="com.rushduck.mapper"></property>
+	</bean>
+	<!--上面的配置取此配置，因为它可以不用一个一个配置xxxMapper对象：创建数据映射器，数据映射器必须为接口-->
+    <!-- <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+         <property name="mapperInterface" value="com.rushduck.mapper.UserMapper" />
+         <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+    </bean> -->
+    
+    <!-- 依赖注入：给service注入dao -->
+	<bean id="userService" class="com.rushduck.service.UserServiceImpl">
+		<property name="userMapper" ref="userMapper"></property>
+	</bean>
+	
+	<bean id="visitService" class="com.rushduck.service.VisitServiceImpl">
+		<property name="visitMapper" ref="visitMapper"></property>
+	</bean>
+	
+	<bean id="musicService" class="com.rushduck.service.MusicServiceImpl">
+		<property name="musicMapper" ref="musicMapper"></property>
+	</bean>
+
+	<bean id="portraitService" class="com.rushduck.service.PortraitServiceImpl">
+		<property name="portraitMapper" ref="portraitMapper"></property>
+	</bean>
+	
+	<bean id="relationService" class="com.rushduck.service.RelationServiceImpl">
+		<property name="relationMapper" ref="relationMapper"></property>
+	</bean>
+	
+	<bean id="messageService" class="com.rushduck.service.MessageServiceImpl">
+		<property name="messageMapper" ref="messageMapper"></property>
+	</bean>
+	
+	<bean id="pictureService" class="com.rushduck.service.PictureServiceImpl">
+		<property name="pictureMapper" ref="pictureMapper"></property>
+	</bean>
+	
+	<bean id="commentService" class="com.rushduck.service.CommentServiceImpl">
+		<property name="commentMapper" ref="commentMapper"></property>
+	</bean>
+	
+	<bean id="likesService" class="com.rushduck.service.LikesServiceImpl">
+		<property name="likesMapper" ref="likesMapper"></property>
+	</bean>
+	
+	<bean id="forwardService" class="com.rushduck.service.ForwardServiceImpl">
+		<property name="forwardMapper" ref="forwardMapper"></property>
+	</bean>
+	
+	<bean id="collectionService" class="com.rushduck.service.CollectionServiceImpl"> 
+		<property name="collectionMapper" ref="collectionMapper"></property>
+	</bean>
+	
+	<bean id="baseService" class="com.rushduck.service.BaseServiceImpl">
+		<property name="musicService" ref="musicService"></property>
+		<property name="portraitService" ref="portraitService"></property>
+		<property name="userService" ref="userService"></property>
+		<property name="messageService" ref="messageService"></property>
+		<property name="pictureService" ref="pictureService"></property>
+		<property name="commentService" ref="commentService"></property>
+		<property name="likesService" ref="likesService"></property>
+		<property name="forwardService" ref="forwardService"></property>
+		<property name="collectionService" ref="collectionService"></property>
+		<property name="relationService" ref="relationService"></property>
+		<property name="visitService" ref="visitService"></property>
+	</bean>
+	
+	<!-- 这里注释下面内容是因为使用注解@Controller把userController加入Ioc容器 -->
+	<!-- 依赖注入：给controller注入service -->
+	<!-- <bean id="userController" class="com.rushduck.controller.UserController">
+		<property name="userService" ref="userService"></property>
+	</bean> -->
+	
+	<!-- 配置事务核心管理器,不同平台不一样 -->
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- 开启注解事务,时尚方便 -->
+	<tx:annotation-driven/>
+	
+	<!-- 事务通知 -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			isolation是隔离级别,propagation是传播行为
+			如果方法非常多,可以使用通配符覆盖所有的增删改查方法
+			<tx:method name="save*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="select*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice> -->
+	
+	<!-- 配置aop -->
+	<!-- <aop:config>
+		通知 + 切点
+		<aop:pointcut expression="execution(* com.rushduck.service.*ServiceImpl.*(..))" id="txPc"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPc"/>
+	</aop:config> -->
+</beans>

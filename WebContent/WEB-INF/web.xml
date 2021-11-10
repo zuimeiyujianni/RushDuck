@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>RushDuck</display-name>
+  <welcome-file-list>
+  	<!-- <welcome-file>myspace.jsp</welcome-file> -->
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 在web项目中引入Spring -->
+  <context-param>
+	<param-name>contextConfigLocation</param-name>
+	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  <!-- Bootstraps the root web application context before servlet initialization -->
+  <listener>
+	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!-- 下面的资源使用默认的servlet访问,注意在要写在DispatcherServlet的前面， 让 defaultServlet先拦截请求，这样请求就不会进入Spring了 -->
+  <servlet-mapping>
+	     <servlet-name>default</servlet-name>
+	     <url-pattern>*.css</url-pattern>
+	     <url-pattern>*.js</url-pattern>
+	     <url-pattern>*.jpg</url-pattern>
+	     <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 给web项目加入SpringMVC支持 -->
+  <!-- SpringMVC:The front controller of this Spring Web application, responsible for handling all application requests -->
+  <servlet>
+	<servlet-name>springDispatcherServlet</servlet-name>
+	<!-- springmvc的入口 -->
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<!-- servlet指定SpringMVC配置文件的位置 -->
+		 	<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:applicationContext-controller.xml</param-value>
+	</init-param>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <!-- Map all requests to the DispatcherServlet for handling:拦截所有的请求,交给SpringMVC处理-->
+  <servlet-mapping>
+	<servlet-name>springDispatcherServlet</servlet-name>
+	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  <!-- 访问了一个错误的界面时候，改界面不存在 ,跳转到4O4page.jsp界面-->
+  <error-page>
+  	<error-code>404</error-code>
+  	<location>/404page.jsp</location>
+  </error-page>
+  
+  <!-- 解决网页的中文乱码问题 -->
+  <filter>
+        <filter-name>characterEncoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+  </filter>
+  <filter-mapping>
+        <filter-name>characterEncoding</filter-name>
+        <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+</web-app>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rushduck.mapper.PictureMapper">
+  <resultMap id="BaseResultMap" type="com.rushduck.bean.Picture">
+    <id column="pictureId" jdbcType="INTEGER" property="pictureid" />
+    <result column="pictureType" jdbcType="VARCHAR" property="picturetype" />
+    <result column="pictureUrl" jdbcType="VARCHAR" property="pictureurl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pictureId, pictureType, pictureUrl
+  </sql>
+  <select id="selectByExample" parameterType="com.rushduck.bean.PictureExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from picture
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from picture
+    where pictureId = #{pictureid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from picture
+    where pictureId = #{pictureid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rushduck.bean.PictureExample">
+    delete from picture
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rushduck.bean.Picture">
+    insert into picture (pictureId, pictureType, pictureUrl
+      )
+    values (#{pictureid,jdbcType=INTEGER}, #{picturetype,jdbcType=VARCHAR}, #{pictureurl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rushduck.bean.Picture">
+    insert into picture
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pictureid != null">
+        pictureId,
+      </if>
+      <if test="picturetype != null">
+        pictureType,
+      </if>
+      <if test="pictureurl != null">
+        pictureUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pictureid != null">
+        #{pictureid,jdbcType=INTEGER},
+      </if>
+      <if test="picturetype != null">
+        #{picturetype,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureurl != null">
+        #{pictureurl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rushduck.bean.PictureExample" resultType="java.lang.Long">
+    select count(*) from picture
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update picture
+    <set>
+      <if test="record.pictureid != null">
+        pictureId = #{record.pictureid,jdbcType=INTEGER},
+      </if>
+      <if test="record.picturetype != null">
+        pictureType = #{record.picturetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pictureurl != null">
+        pictureUrl = #{record.pictureurl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update picture
+    set pictureId = #{record.pictureid,jdbcType=INTEGER},
+      pictureType = #{record.picturetype,jdbcType=VARCHAR},
+      pictureUrl = #{record.pictureurl,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rushduck.bean.Picture">
+    update picture
+    <set>
+      <if test="picturetype != null">
+        pictureType = #{picturetype,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureurl != null">
+        pictureUrl = #{pictureurl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pictureId = #{pictureid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rushduck.bean.Picture">
+    update picture
+    set pictureType = #{picturetype,jdbcType=VARCHAR},
+      pictureUrl = #{pictureurl,jdbcType=VARCHAR}
+    where pictureId = #{pictureid,jdbcType=INTEGER}
+  </update>
+</mapper>
